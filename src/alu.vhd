@@ -4,22 +4,18 @@ use ieee.numeric_std.all;
 
 
 entity alu is
-    generic ( 
-    constant size: natural := 8;
-    constant rotate: natural := 1);
-
     port (
-    a, b : in  std_logic_vector(size-1 downto 0);
+    a, b : in  std_logic_vector(3 downto 0);
     alu_sel : in  std_logic_vector(3 downto 0);
-    alu_out : out  std_logic_vector(size-1 downto 0);
+    alu_out : out  std_logic_vector(3 downto 0);
     carryout : out std_logic);
 end alu;
 
 
 architecture behavioral of alu is
 
-signal alu_result : std_logic_vector (size-1 downto 0);
-signal tmp: std_logic_vector (size downto 0);
+signal alu_result : std_logic_vector (3 downto 0);
+signal tmp: std_logic_vector (4 downto 0);
 
 begin
     process(a,b,alu_sel)
@@ -28,38 +24,38 @@ begin
         when "0000" => -- addition
             alu_result <= std_logic_vector(to_unsigned(
                           (to_integer(unsigned(a)) + to_integer(unsigned(b)))
-                          ,size));
+                          ,4));
 
         when "0001" => -- subtraction
             alu_result <= std_logic_vector(to_unsigned(
                           (to_integer(unsigned(a)) - to_integer(unsigned(b)))
-                          ,size));
+                          ,4));
 
         when "0010" => -- multiplication
             alu_result <= std_logic_vector(to_unsigned(
                           (to_integer(unsigned(a)) * to_integer(unsigned(b)))
-                          ,size));
+                          ,4));
 
         when "0011" => -- division
             alu_result <= std_logic_vector(to_unsigned(
                           to_integer(unsigned(a)) / to_integer(unsigned(b))
-                          ,size));
+                          ,4));
 
         when "0100" => -- logical shift left
             alu_result <= std_logic_vector(
-                          unsigned(a) sll rotate);
+                          unsigned(a) sll 1);
 
         when "0101" => -- logical shift right
             alu_result <= std_logic_vector(
-                          unsigned(a) srl rotate);
+                          unsigned(a) srl 1);
 
         when "0110" => --  rotate left
             alu_result <= std_logic_vector(
-                          unsigned(a) rol rotate);
+                          unsigned(a) rol 1);
 
         when "0111" => -- rotate right
             alu_result <= std_logic_vector(
-                          unsigned(a) ror rotate);
+                          unsigned(a) ror 1);
 
         when "1000" => -- logical and 
             alu_result <= a and b;
@@ -96,13 +92,13 @@ begin
         when others => -- default operation
             alu_result <= std_logic_vector(to_unsigned(
                           (to_integer(unsigned(a)) + to_integer(unsigned(b)))
-                          ,size));
+                          ,4));
         end case;
     end process;
 
     alu_out <= alu_result;
     tmp <= std_logic_vector(to_unsigned(
                   (to_integer(unsigned(a)) + to_integer(unsigned(b)))
-                  ,size+1));
-    carryout <= tmp(size);
+                  ,5));
+    carryout <= tmp(4);
 end architecture behavioral;

@@ -4,38 +4,29 @@ use ieee.numeric_std.all;
 --use ieee.std_logic_unsigned.all;
  
 entity alu_tb is
-    generic(
-    constant size: natural := 8;
-    constant rotate: natural := 1);
 end alu_tb;
 
 
 architecture test_bench of alu_tb is 
  
     component alu
-    generic ( 
-    constant size: natural := 8;
-    constant rotate: natural := 1);
     port(
-    a : in  std_logic_vector(size-1 downto 0);
-    b : in  std_logic_vector(size-1 downto 0);
+    a : in  std_logic_vector(3 downto 0);
+    b : in  std_logic_vector(3 downto 0);
     alu_sel : in  std_logic_vector(3 downto 0);
-    alu_out : out  std_logic_vector(size-1 downto 0);
+    alu_out : out  std_logic_vector(3 downto 0);
     carryout : out  std_logic);
     end component alu;
 
-    signal a : std_logic_vector(size-1 downto 0) := (others => '0');
-    signal b : std_logic_vector(size-1 downto 0) := (others => '0');
+    signal a : std_logic_vector(3 downto 0) := (others => '0');
+    signal b : std_logic_vector(3 downto 0) := (others => '0');
     signal alu_sel : std_logic_vector(3 downto 0) := (others => '0');
 
-    signal alu_out : std_logic_vector(size-1 downto 0);
+    signal alu_out : std_logic_vector(3 downto 0);
     signal carryout : std_logic;
 
 begin
     dut: alu
-    generic map(
-    size => size,
-    rotate => rotate)
     port map (
     a => a,
     b => b,
@@ -45,8 +36,8 @@ begin
 
     test: process
     begin  
-        a <= x"0a";
-        b <= x"02";
+        a <= x"a";
+        b <= x"2";
 
         alu_sel <= x"0";
         wait for 20 ns;
